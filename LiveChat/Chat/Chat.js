@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Dimensions } from 'react-native';
+import { StyleSheet, Text, Dimensions, Platform } from 'react-native';
 import { init } from '@livechat/livechat-visitor-sdk/es/index';
 import { View } from 'react-native-animatable';
 import PropTypes from 'prop-types';
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width,
-    height,
+    height: Platform.OS === 'ios' ? height : height - height / 25,
     position: 'absolute',
     flexDirection: 'column',
     backgroundColor: '#fff',

@@ -13,7 +13,7 @@ export default class NavigationBar extends Component {
       <View style={styles.navBar}>
         <Text style={styles.title}>{this.props.chatTitle}</Text>
         <TouchableOpacity style={styles.back} onPress={this.props.closeChat}>
-          <Image source={backImage} style={styles.backIcon} resizeMode="stretch" />
+          <Image key={Math.random()} source={backImage} style={styles.backIcon} resizeMode="stretch" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
       </View>

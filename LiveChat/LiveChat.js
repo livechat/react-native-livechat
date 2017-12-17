@@ -3,6 +3,7 @@ import { View, Dimensions, StyleSheet, Image, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import ChatBubble from './ChatBubble/ChatBubble';
 import Chat from './Chat/Chat';
+import {init} from "@livechat/livechat-visitor-sdk/es/index";
 
 const chatIcon = require('../assets/chat.png');
 
@@ -89,7 +90,7 @@ LiveChat.defaultProps = {
   movable: true,
   onLoaded: () => {},
   bubbleLeft: width - (width / 5) - (width / 50),
-  bubbleTop: Platform.OS === 'ios' ? height - (width / 5) - (width / 50) : height - (width / 5) - (width / 20),
+  bubbleTop: Platform.OS === 'ios' ? height - (width / 5) - (width / 50) : height - (width / 5) - (width / 13),
   chatTitle: 'Chat with us!',
   greeting: 'Welcome to our LiveChat!\nHow may We help you?',
   noAgents: 'Our agents are not available right now.',
