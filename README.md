@@ -66,7 +66,7 @@ Chat bubble is a small view that by default is blue and is placed on bottom-righ
 
 4. If you don't like appearance of this bubble at all, you can send **bubble** prop with your own component.
 
-*Example: *
+*Example:*
 ```javascript
 <LiveChat license={your_license_id}
   bubble={
@@ -112,6 +112,8 @@ Let's say you want to close current chat. You can do it in two ways:
 ```
 
 *Table of all available methods:*
+
+
 |Name|Note|
 |---|---|
 | closeChat | Closes the chat. |
