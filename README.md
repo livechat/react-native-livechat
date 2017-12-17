@@ -96,7 +96,7 @@ This module uses LiveChat Visitor SDK.
 
 *You can find more information about available methods [here](https://github.com/FaridSafi/react-native-gifted-chat).*
 
-To use all methods you must create LiveChat reference.
+To use VisitorSDK methods you must create LiveChat reference.
 
 You can do it like this:
 ```javascript
