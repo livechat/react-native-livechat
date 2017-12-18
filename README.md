@@ -1,6 +1,6 @@
 ﻿# React Native LiveChat
 
-React Native component to integrate your application with LiveChat easily ;)
+React Native component to integrate your application with LiveChat chat widget easily ;)
 
 Works perfectly **both for iOS and Android.**
 
