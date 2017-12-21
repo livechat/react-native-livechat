@@ -4,7 +4,7 @@ React Native component to integrate your application with LiveChat chat widget e
 
 Works perfectly **both for iOS and Android.**
 
-*You can start your 30 days free trial [here](https://www.livechatinc.com/signup/?utm_source=github&utm_medium=link&=utm_campaign=react-native-livechat).*
+*You can start your 30 days free trial [here](https://www.livechatinc.com/signup/?utm_source=github.com&utm_medium=link&=utm_campaign=react-native-livechat).*
 
 ### Pre requirements:
 
