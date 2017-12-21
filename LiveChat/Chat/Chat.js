@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, Dimensions, Platform } from 'react-native';
-import { init } from '@livechat/livechat-visitor-sdk/es/index';
+import { init } from '@livechat/livechat-visitor-sdk';
 import { View } from 'react-native-animatable';
 import PropTypes from 'prop-types';
 import { GiftedChat } from 'react-native-gifted-chat';
