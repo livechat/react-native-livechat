@@ -94,7 +94,7 @@ For example if you would like to control **onPressAvatar** to show info about ag
 ### LiveChat Visitor SDK
 This module uses LiveChat Visitor SDK.
 
-*You can find more information about available methods [here](https://github.com/FaridSafi/react-native-gifted-chat).*
+*You can find more information about available methods [here](https://docs.livechatinc.com/visitor-sdk/).*
 
 To use VisitorSDK methods you must create LiveChat reference.
 
