@@ -1,32 +1,37 @@
-﻿# React Native LiveChat
+# LiveChat for React Native
 
-React Native component to integrate your application with LiveChat chat widget easily ;)
+This is a React Native component to easily add [LiveChat widget](https://www.livechatinc.com/) to your application.
 
-Works perfectly **both for iOS and Android.**
+It works for both iOS and Android.
 
-*You can start your 30 days free trial [here](https://www.livechatinc.com/signup/?utm_source=github.com&utm_medium=link&=utm_campaign=react-native-livechat).*
+![LiveChat for React Native demo](https://raw.githubusercontent.com/venits/react-native-router-flux/master/livechatdemo.gif)
 
-### Pre requirements:
+## Getting Started
 
-To use LiveChat in your application you need **license_id**. 
+### Prerequisites
 
-You get one after creating account on our [website](https://www.livechatinc.com/).
+To use LiveChat in your React application, you will need LiveChat license ID. 
 
-You can check your **license_id** anytime [here](https://my.livechatinc.com/settings/code).
+If you already have a LiveChat account, get your **license_id** [here](https://my.livechatinc.com/settings/code).
 
-*If you have difficulties finding your **license_id** please take a look at this [screenshot](https://github.com/livechat/react-native-livechat/blob/master/license.png).*
+![LiveChat license ID](https://github.com/livechat/react-livechat/blob/master/license.png)
+
+If you don't have an account, you can create one [here](https://www.livechatinc.com/).
 
 ### Installation
-All you have to do:
+
+To import LiveChat for React Native, run the following command:
+
 ```javascript
 npm install react-native-livechat --save
 ```
 
-### Usage
+## User Guide
 
-Usage is very simple:
+### Start
 
-*Import LiveChat component and put it in your render method:*
+Having imported LiveChat for React Native, put it in your render method:
+
 ```javascript
 import LiveChat from 'react-native-livechat'
 
@@ -36,37 +41,40 @@ import LiveChat from 'react-native-livechat'
 ```
 
 
-### Demo
-![Alt Text](https://raw.githubusercontent.com/venits/react-native-router-flux/master/livechatdemo.gif)
+### Customization
 
-### Chat Bubble
+#### Chat bubble
 
-Chat bubble is a small view that by default is blue and is placed on bottom-right side of your screen.
+Chat bubble is the round icon (chat trigger) in the bottom right corner of the screen.
 
-1. Can can control position of bubble by simply sending **bubbleLeft** and **bubbleTop** props.
+##### Position
 
-*Example:*
+You can control the position of the bubble with `bubbleLeft` and `bubbleTop` props:
+
 ```javascript
 <LiveChat bubbleLeft={0} bubbleTop={0} license={your_license_id} />
 ```
 
-2. By default bubble component is draggable and movable. You can disable this option by sending **movable** prop with *false* value.
+##### Draggability
+
+By default, the bubble component is draggable and movable. You can disable this option by sending `movable` prop with `false` value:
 
 *Example:*
 ```javascript
 <LiveChat movable={false} license={your_license_id} />
 ```
 
-3. If would like to change color of bubble you can simply pass **bubbleColor** prop with LiveChat component.
+##### Color
 
-*Example:*
+You can change the color of the bubble by passing `bubbleColor` prop:
+
 ```javascript
 <LiveChat bubbleColor='red' license={your_license_id} />
 ```
+##### Custom bubble
 
-4. If you don't like appearance of this bubble at all, you can send **bubble** prop with your own component.
+If you don't like the default bubble, you can send `bubble` prop with your own component:
 
-*Example:*
 ```javascript
 <LiveChat license={your_license_id}
   bubble={
@@ -75,44 +83,41 @@ Chat bubble is a small view that by default is blue and is placed on bottom-righ
 />
 ```
 
-### Chat Appearance
+#### Chat window
 
 This module uses [react-native-gifted-chat](https://github.com/FaridSafi/react-native-gifted-chat) for chat UI.
 
-You can customise your chat appearance by sending props to LiveChat component like you would normally send them to GiftedChat component.
+You can customise your chat widget by sending props to LiveChat component (like you would normally do with GiftedChat component).
 
-For example if you would like to control **onPressAvatar** to show info about agent, you can do it like this:
+For example, if you want `onPressAvatar` to show agent's details, you can do it like this:
 
-*Example:*
 ```javascript
 <LiveChat license={your_license_id}
   onPressAvatar={ info => console.warn(info) } />
 ```
 
-*You can find information about all props here: [react-native-gifted-chat](https://github.com/FaridSafi/react-native-gifted-chat).*
+You can find all props in the official [react-native-gifted-chat documentation](https://github.com/FaridSafi/react-native-gifted-chat).
 
-### LiveChat Visitor SDK
-This module uses LiveChat Visitor SDK.
 
-*You can find more information about available methods [here](https://docs.livechatinc.com/visitor-sdk/).*
+### Methods
 
-To use VisitorSDK methods you must create LiveChat reference.
+This module uses [LiveChat Customer SDK](https://docs.livechatinc.com/visitor-sdk/). All methods are described [here](https://docs.livechatinc.com/visitor-sdk/#methods).
 
-You can do it like this:
+To use LiveChat Visitor SDK method, you have to create LiveChat reference:
+
 ```javascript
 <LiveChat onLoaded={ ref => this.livechat = ref } 
 	license={your_license_id}/>
 ```
 
-Let's say you want to close current chat. You can do it in two ways:
+Let's say you want to close the current chat. You can do it in two ways:
 ```javascript
  this.livechat.closeChat();
  // is the same as:
  GLOBAL.visitorSDK.closeChat();
 ```
 
-*Table of all available methods:*
-
+#### Available methods
 
 |Name|Note|
 |---|---|
@@ -128,7 +133,7 @@ Let's say you want to close current chat. You can do it in two ways:
 | destroy | Disconnect Visitor SDK and unsubscribe from all callbacks. |
 
 
-### Support
-In case of any problem you can chat with us [here](https://www.livechatinc.com/contact/).
+## Support
+If you need any help, you can chat with us [here](https://www.chat.io/live-chat-guide/).
 
-**I hope you will find this module useful. Happy Coding :)**
+I hope you will find this module useful. Happy coding!
