@@ -24,6 +24,7 @@ export default class LiveChat extends Component {
     if (!GLOBAL.visitorSDK) {
       GLOBAL.visitorSDK = init({
         license: props.license,
+        group: props.group
       });
     }
     props.onLoaded(GLOBAL.visitorSDK);
@@ -74,6 +75,7 @@ export default class LiveChat extends Component {
 
 LiveChat.propTypes = {
   license: PropTypes.number.isRequired,
+  group: PropTypes.number,
   movable: PropTypes.bool,
   bubble: PropTypes.element,
   bubbleColor: PropTypes.string,
