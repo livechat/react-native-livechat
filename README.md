@@ -40,6 +40,11 @@ import LiveChat from 'react-native-livechat'
 <LiveChat license={your_license_id} />
 ```
 
+You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
+```javascript
+<LiveChat group={2} license={your_license_id} />
+```
+
 
 ### Customization
 
