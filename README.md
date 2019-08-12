@@ -121,12 +121,32 @@ Let's say you want to close the current chat. You can do it in two ways:
  // is the same as:
  GLOBAL.visitorSDK.closeChat();
 ```
+#### Props
+
+|Name|Type|Required|Note|
+|---|---|---|---|
+| animateOnOpen | Bool | No | Chat will open with an animation. |
+| animateOnClose | Bool | No | Chat will close with an animation. |
+| license | Int | Yes | License number for livechat. |
+| group | Int | No | Description goes here. |
+| movable | Bool | No | Description goes here. |
+| bubble | Element | No | Description goes here. |
+| bubbleColor | String | No | Description goes here. |
+| bubbleLeft | Number | No | Description goes here. |
+| bubbleTop | Number | No | Description goes here. |
+| chatTitle | String | No | Description goes here. |
+| greeting | String | No | Description goes here. |
+| noAgents | String | No | Description goes here. |
+| onLoaded | Func | No | Description goes here. |
+
+
 
 #### Available methods
 
 |Name|Note|
 |---|---|
 | closeChat | Closes the chat. |
+| openChat | Opens the chat. |
 | sendMessage | Sends a message. More information about message format you can find [here](https://docs.livechatinc.com/visitor-sdk/#sendmessage). |
 | rateChat | Enables chat ratings. More info [here](https://docs.livechatinc.com/visitor-sdk/#ratechat).  |
 |setSneakPeek | Enables sneak peeks to see what the visitor is typing in before they actually send the message. More info [here](https://docs.livechatinc.com/visitor-sdk/#setsneakpeek). |
