@@ -138,6 +138,7 @@ Let's say you want to close the current chat. You can do it in two ways:
 | greeting | String | No | Description goes here. |
 | noAgents | String | No | Description goes here. |
 | onLoaded | Func | No | Description goes here. |
+| closeChat | Func | No | Overrides the default function to run when user clicks the "Back" button, closing the chat. |
 
 
 
