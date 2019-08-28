@@ -54,10 +54,18 @@ Chat bubble is the round icon (chat trigger) in the bottom right corner of the s
 
 ##### Position
 
-You can control the position of the bubble with `bubbleLeft` and `bubbleTop` props:
+You can control the position of the bubble with `bubbleStyles` prop:
 
 ```javascript
-<LiveChat bubbleLeft={0} bubbleTop={0} license="your_license_id" />
+const styles = StyleSheet.create({
+  bubbleStyles: {
+    position: "absolute",
+    left: 24,
+    bottom: 24
+  }
+});
+
+<LiveChat license="your_license_id" bubbleStyles={styles.bubbleStyles} />
 ```
 
 ##### Draggability
