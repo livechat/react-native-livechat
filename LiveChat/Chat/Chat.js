@@ -113,9 +113,13 @@ export default class Chat extends React.Component {
   };
 
   closeChat = () => {
-    this.chat.lightSpeedOut(500).then(() => {
-      this.props.closeChat();
-    });
+    if (this.props.animateOnClose) {
+      this.chat.lightSpeedOut(500).then(() => {
+        this.props.closeChat();
+      });
+    } else {
+        this.props.closeChat();
+    }
   };
 
   renderFooter = () => {
@@ -135,7 +139,7 @@ export default class Chat extends React.Component {
     if (this.props.isChatOn) {
       return (
         <View
-          animation="lightSpeedIn"
+          animation={(this.props.animateOnOpen) ? "lightSpeedIn" : ""}
           style={styles.container}
           ref={(ref) => { this.chat = ref; }}
         >

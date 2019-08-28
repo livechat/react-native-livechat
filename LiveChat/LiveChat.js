@@ -67,7 +67,7 @@ export default class LiveChat extends Component {
           bubble={this.state.bubble}
           disabled={this.props.movable}
         />
-        <Chat {...this.props} isChatOn={this.state.isChatOn} closeChat={this.closeChat} />
+        <Chat {...this.props} isChatOn={this.state.isChatOn} closeChat={this.props.closeChat || this.closeChat} />
       </View>
     );
   }
@@ -85,6 +85,7 @@ LiveChat.propTypes = {
   greeting: PropTypes.string,
   noAgents: PropTypes.string,
   onLoaded: PropTypes.func,
+  closeChat: PropTypes.func,
 };
 
 LiveChat.defaultProps = {
