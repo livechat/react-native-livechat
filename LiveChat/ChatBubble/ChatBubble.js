@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import {View} from 'react-native-animatable';
+import { View } from 'react-native-animatable';
 
 export default class ChatBubble extends Component {
   render() {
