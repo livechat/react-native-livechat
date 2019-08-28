@@ -37,12 +37,12 @@ import LiveChat from 'react-native-livechat'
 
 ...
 
-<LiveChat license="your_license_id" />
+<LiveChat license={your_license_id} />
 ```
 
 You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
 ```javascript
-<LiveChat group={2} license="your_license_id" />
+<LiveChat group={2} license={your_license_id} />
 ```
 
 
@@ -54,10 +54,18 @@ Chat bubble is the round icon (chat trigger) in the bottom right corner of the s
 
 ##### Position
 
-You can control the position of the bubble with `bubbleLeft` and `bubbleTop` props:
+You can control the position of the bubble with `bubbleStyles` prop:
 
 ```javascript
-<LiveChat bubbleLeft={0} bubbleTop={0} license="your_license_id" />
+const styles = StyleSheet.create({
+  bubbleStyles: {
+    position: "absolute",
+    left: 24,
+    bottom: 24
+  }
+});
+
+<LiveChat license={your_license_id} bubbleStyles={styles.bubbleStyles} />
 ```
 
 ##### Draggability
@@ -66,7 +74,7 @@ By default, the bubble component is draggable and movable. You can disable this 
 
 *Example:*
 ```javascript
-<LiveChat movable={false} license="your_license_id" />
+<LiveChat movable={false} license={your_license_id} />
 ```
 
 ##### Color
@@ -74,14 +82,14 @@ By default, the bubble component is draggable and movable. You can disable this 
 You can change the color of the bubble by passing `bubbleColor` prop:
 
 ```javascript
-<LiveChat bubbleColor='red' license="your_license_id" />
+<LiveChat bubbleColor='red' license={your_license_id} />
 ```
 ##### Custom bubble
 
 If you don't like the default bubble, you can send `bubble` prop with your own component:
 
 ```javascript
-<LiveChat license="your_license_id"
+<LiveChat license={your_license_id}
   bubble={
   <View style={{ width: 60, height: 60, backgroundColor: 'green' }} />
   }
@@ -97,7 +105,7 @@ You can customise your chat widget by sending props to LiveChat component (like 
 For example, if you want `onPressAvatar` to show agent's details, you can do it like this:
 
 ```javascript
-<LiveChat license="your_license_id"
+<LiveChat license={your_license_id}
   onPressAvatar={ info => console.warn(info) } />
 ```
 
@@ -112,7 +120,7 @@ To use LiveChat Visitor SDK method, you have to create LiveChat reference:
 
 ```javascript
 <LiveChat onLoaded={ ref => this.livechat = ref } 
-	license="your_license_id"/>
+	license={your_license_id}/>
 ```
 
 Let's say you want to close the current chat. You can do it in two ways:

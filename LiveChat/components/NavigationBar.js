@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Dimensions, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 
-const backImage = require('../../../assets/ios_back.png');
+const backImage = require('./../../assets/ios_back.png');
 
 const { height, width } = Dimensions.get('window');
 const totalSize = num => (Math.sqrt((height * height) + (width * width)) * num) / 100;
@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row', marginLeft: width / 40,
   },
   backIcon: {
-    height: height / 25, width: height / 50,
+    height: height / 30, width: height / 60,
   },
   backText: {
-    color: '#007fff', fontSize: totalSize(2.2), paddingLeft: width / 50
+    color: '#007fff', fontSize: totalSize(2), paddingLeft: width / 40
   },
   title: {
     color: '#444',
-    fontSize: totalSize(2.3),
+    fontSize: totalSize(2.1),
     fontWeight: '600',
     position: 'absolute',
     width,
