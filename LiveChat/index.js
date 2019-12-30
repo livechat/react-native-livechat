@@ -5,9 +5,22 @@ import ChatBubble from './components/ChatBubble';
 import Chat from './components/Chat';
 GLOBAL.cookie = '';
 import { init } from "./sdk/livechat-visitor-sdk.min";
+// import { AuthWebView } from "@livechat/customer-auth";
+// import { init as CustomerSdkInit } from "@livechat/customer-sdk";
 
 const chatIcon = require('./../assets/chat.png');
 const { width } = Dimensions.get('window');
+
+// const initCustomerSdk = (license, clientId, redirectUri) => {
+//   const customerSDK = CustomerSdkInit({
+//     license,
+//     clientId,
+//     redirectUri,
+//   });
+//   customerSDK.on("new_event", newEvent => {
+//     console.want('> event', newEvent);
+//   });
+// }
 
 export default class LiveChat extends Component {
   constructor(props) {
@@ -29,7 +42,13 @@ export default class LiveChat extends Component {
       group: props.group,
     });
 
+    GLOBAL.visitorSDK.on('protocol_upgraded', () => {
+      console.warn('>> protocol upgraded')
+      // initCustomerSdk(props.license, props.clientId, props.redirectUri)
+    })
+
     props.onLoaded(GLOBAL.visitorSDK);
+
   }
 
   defineStyles = () => {
@@ -72,7 +91,8 @@ export default class LiveChat extends Component {
         {...this.props}
         isChatOn={isChatOn}
         closeChat={this.closeChat}
-      />
+      />,
+      // <AuthWebView />
     ];
   }
 }
@@ -87,7 +107,8 @@ LiveChat.propTypes = {
   greeting: PropTypes.string,
   noAgents: PropTypes.string,
   onLoaded: PropTypes.func,
-  
+  clientId: PropTypes.string,
+  redirectUri: PropTypes.string,
 };
 
 LiveChat.defaultProps = {
