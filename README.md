@@ -10,9 +10,9 @@ It works for both iOS and Android.
 
 ### Prerequisites
 
-To use LiveChat in your React application, you will need LiveChat license ID. 
+To use LiveChat in your React application, you will need the LiveChat license ID. 
 
-To obtain authorization data (redirect_uri and client_id) you need to create a new LiveChat app. See our [Creating LiveChat apps](https://developers.livechatinc.com/docs/getting-started/guides/#creating-livechat-apps) documentation. 
+To obtain authorization data (redirect_uri and client_id), you need to create a new LiveChat app. See our [Creating LiveChat apps](https://developers.livechatinc.com/docs/getting-started/guides/#creating-livechat-apps) documentation. 
 
 ![LiveChat license ID](react-native-app-details.png)
 
@@ -45,13 +45,13 @@ npm install react-native-webview react-native-livechat --save
 - card masking
 - chat boosters
 
-If you want to use unsupported features in your React Native app, read about Alternative React Native installation method.
+If you want to use unsupported features in your React Native app, read about the Alternative React Native installation method.
 
 ### Alternative React Native installation method
 
-This project implements basic LiveChat features using React Native technology. If you need to use more advanced LiveChat features, you can use Webview to embbed web LiveChat widget using direct chat link.
+This project implements basic LiveChat features using React Native technology. If you need to use more advanced LiveChat features, you can use Webview to embed web LiveChat widget using a direct chat link.
 
-To do it, use `react-native-webview` library and add `Webview` component with you licenses direct chat link, replacing `LICENSE_ID` string with you LiveChat's license id. 
+To do it, use `react-native-webview` library and add `Webview` component with your licenses direct chat link, replacing `LICENSE_ID` string with you LiveChat's license id. 
 
 ```javascript
 <WebView source={{uri: 'https://secure.livechatinc.com/licence/LICENSE_ID/v2/open_chat.cgi'}} />
@@ -82,7 +82,7 @@ You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
 
 #### Chat bubble
 
-Chat bubble is the round icon (chat trigger) in the bottom right corner of the screen.
+The chat bubble is the round icon (chat trigger) in the bottom right corner of the screen.
 
 ##### Position
 
@@ -90,11 +90,11 @@ You can control the position of the bubble with `bubbleStyles` prop:
 
 ```javascript
 const styles = StyleSheet.create({
-  bubbleStyles: {
-    position: "absolute",
-    left: 24,
-    bottom: 24
-  }
+ bubbleStyles: {
+ position: "absolute",
+ left: 24,
+ bottom: 24
+ }
 });
 
 <LiveChat license="your_license_id" redirectUri="https://example.org" clientId="dal-app-client-id" bubbleStyles={styles.bubbleStyles} />
@@ -113,12 +113,12 @@ If you don't like the default bubble, you can send `bubble` prop with your own c
 
 ```javascript
 <LiveChat
-  license="your_license_id"
-  redirectUri="https://example.org"
-  clientId="dal-app-client-id"
-  bubble={
-    <View style={{ width: 60, height: 60, backgroundColor: 'green' }} />
-  }
+ license="your_license_id"
+ redirectUri="https://example.org"
+ clientId="dal-app-client-id"
+ bubble={
+ <View style={{ width: 60, height: 60, backgroundColor: 'green' }} />
+ }
 />
 ```
 
@@ -132,7 +132,7 @@ For example, if you want `onPressAvatar` to show agent's details, you can do it 
 
 ```javascript
 <LiveChat license="your_license_id"
-  onPressAvatar={ info => console.warn(info) } />
+ onPressAvatar={ info => console.warn(info) } />
 ```
 
 You can find all props in the official [react-native-gifted-chat documentation](https://github.com/FaridSafi/react-native-gifted-chat).
