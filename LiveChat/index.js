@@ -376,15 +376,6 @@ export default class LiveChat extends Component {
       })
     });
 
-    customerSDK.on('chat_thread_properties_deleted', ({ thread, properties }) => {
-      if ('lc2' in properties && properties.lc2 && typeof properties.lc2.queue_pos !== 'undefined') {
-        this.setState({
-          queued: false,
-          queueData: {},
-        })
-      }
-    })
-
     customerSDK.on('thread_closed', () => {
       this.setState({
         chatActive: false,
@@ -396,20 +387,6 @@ export default class LiveChat extends Component {
         chatActive: true,
       })
     })
-  
-    customerSDK.on('chat_thread_properties_updated', ({ thread, properties }) => {
-      if ('lc2' in properties && properties.lc2 && typeof properties.lc2.queue_pos !== 'undefined') {
-        const { queue_waiting_time, queue_pos } = properties.lc2
-        this.setState({
-          queued: true,
-          queueData: {
-            numberInQueue: queue_pos,
-            waitingTime: queue_waiting_time,
-          }
-        })
-      }
-    })
-  }
 
   defineStyles = () => {
     this.styles = StyleSheet.create({
