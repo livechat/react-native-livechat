@@ -45,16 +45,16 @@ npm install react-native-webview react-native-livechat --save
 - card masking
 - chat boosters
 
-If you want to use unsupported features in your React Native app, read about the Alternative React Native installation method.
+If you would like to use unsupported features in your React Native app, read about the Alternative React Native installation method.
 
 ### Alternative React Native installation method
 
 This project implements basic LiveChat features using React Native technology. If you need to use more advanced LiveChat features, you can use Webview to embed web LiveChat widget using a direct chat link.
 
-To do it, use `react-native-webview` library and add `Webview` component with your licenses direct chat link, replacing `LICENSE_ID` string with you LiveChat's license id. 
+To do it, use `react-native-webview` library and add `Webview` component with your licenses direct chat link, replacing `<LICENSE_ID>` string with you LiveChat's license id. 
 
 ```javascript
-<WebView source={{uri: 'https://secure.livechatinc.com/licence/LICENSE_ID/v2/open_chat.cgi'}} />
+<WebView source={{uri: 'https://secure.livechatinc.com/licence/<LICENSE_ID>/v2/open_chat.cgi'}} />
 
 ```
 
@@ -69,12 +69,12 @@ import LiveChat from 'react-native-livechat'
 
 ...
 
-<LiveChat license="your_license_id" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
 ```
 
 You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
 ```javascript
-<LiveChat group={2} license="your_license_id" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat group={2} license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
 ```
 
 
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
  }
 });
 
-<LiveChat license="your_license_id" redirectUri="https://example.org" clientId="dal-app-client-id" bubbleStyles={styles.bubbleStyles} />
+<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" bubbleStyles={styles.bubbleStyles} />
 ```
 
 ##### Color
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
 You can change the color of the bubble by passing `bubbleColor` prop:
 
 ```javascript
-<LiveChat bubbleColor='red' license="your_license_id" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat bubbleColor='red' license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
 ```
 ##### Custom bubble
 
@@ -113,7 +113,7 @@ If you don't like the default bubble, you can send `bubble` prop with your own c
 
 ```javascript
 <LiveChat
- license="your_license_id"
+ license="<LICENSE_ID>"
  redirectUri="https://example.org"
  clientId="dal-app-client-id"
  bubble={
@@ -131,7 +131,7 @@ You can customise your chat widget by sending props to LiveChat component (like 
 For example, if you want `onPressAvatar` to show agent's details, you can do it like this:
 
 ```javascript
-<LiveChat license="your_license_id"
+<LiveChat license="<LICENSE_ID>"
  onPressAvatar={ info => console.warn(info) } />
 ```
 

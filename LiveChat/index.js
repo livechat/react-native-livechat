@@ -387,6 +387,7 @@ export default class LiveChat extends Component {
         chatActive: true,
       })
     })
+  }
 
   defineStyles = () => {
     this.styles = StyleSheet.create({

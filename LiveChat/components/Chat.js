@@ -15,12 +15,8 @@ export default class Chat extends React.Component {
     this.renderFooter = this.renderFooter.bind(this);
   }
 
-  handleSend = (messages) => {
-    this.props.handleSendMessage(messages[0].text)
-  };
-
-  closeChat = () => {
-    this.props.closeChat();
+  handleSend = ([message]) => {
+    this.props.handleSendMessage(message.text)
   };
 
   renderFooter = () => {
@@ -37,29 +33,43 @@ export default class Chat extends React.Component {
   };
 
   render() {
-    if (this.props.isChatOn) {
+    const {
+      messages,
+      onInputChange,
+      customer,
+      isTyping,
+      isChatOn,
+      onQuickReply,
+      disableComposer,
+      chatTitle,
+      closeChat,
+      headerText,
+      ...restProps
+    } = this.props
+    const isReconnecting = this.props.connectionState !== 'connected'
+    if (isChatOn) {
       return (
         <View
           animation="fadeInUp"
           style={styles.container}
           ref={(ref) => { this.chat = ref; }}
         >
-          <NavigationBar chatTitle={this.props.chatTitle} closeChat={this.closeChat} />
-          { this.props.connectionState !== 'connected' && <Text style={styles.connectionStatus}>Reconnecting...</Text> }
-          {this.props.headerText && <Text style={styles.status}>{ this.props.headerText }</Text> }
+          <NavigationBar chatTitle={chatTitle} closeChat={closeChat} />
+          { isReconnecting && <Text style={styles.connectionStatus}>Reconnecting...</Text> }
+          {headerText && <Text style={styles.status}>{ headerText }</Text> }
           <GiftedChat
             inverted={false}
-            messages={this.props.messages}
+            messages={messages}
             scrollToBottom
             renderFooter={this.renderFooter}
             onSend={this.handleSend}
-            onInputTextChanged={this.props.onInputChange}
-            user={this.props.customer}
-            isTyping={this.props.isTyping}
-            onQuickReply={this.props.onQuickReply}
-            disableComposer={this.props.disableComposer}
+            onInputTextChanged={onInputChange}
+            user={customer}
+            isTyping={isTyping}
+            onQuickReply={onQuickReply}
+            disableComposer={disableComposer}
             showAvatarForEveryMessage={false}
-            {...this.props}
+            {...restProps}
           />
         </View>
       );

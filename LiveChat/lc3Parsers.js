@@ -1,23 +1,23 @@
 const parseRichMessage = (event, user) => {
-    const elements = event.elements[0]
+    const [ element ] = event.elements
     return {
       _id: String(event.id),
       user,
       createdAt: event.createdAt,
       thread: event.thread,
-      text: `${elements.title ? elements.title : ''}${elements.subtitle ? '\n' + elements.subtitle : ''}`,
+      text: `${element.title ? element.title : ''}${element.subtitle ? '\n' + element.subtitle : ''}`,
       system: event.type === 'system_message',
       sent: true,
       pending: false,
-      ...(elements.image && { image: elements.image.url }),
+      ...(element.image && { image: element.image.url }),
       ...(event.template === 'quick_replies' && {
         quickReplies: {
           type: 'radio',
           keepIt: false,
-          values: elements.buttons.map(_quickReply => ({
-            title: _quickReply.text,
-            value: _quickReply.value,
-            postback: _quickReply.postback,
+          values: element.buttons.map(quickReply => ({
+            title: quickReply.text,
+            value: quickReply.value,
+            postback: quickReply.postback,
           }))
         }
       })
@@ -28,7 +28,7 @@ export const parseEvent = (event, user) => {
     if (event.type === 'rich_message') {
       return parseRichMessage(event, user)
     }
-    if (event.type !== 'message' && event.type !== 'system_message' && event.type !== 'file') {
+    if (!['message', 'system_message', 'file'].includes(event.type)) {
       return null
     }
     return {
