@@ -14,13 +14,16 @@ To use LiveChat in your React application, you will need the LiveChat license ID
 
 To obtain authorization data (redirect_uri and client_id), you need to create a new LiveChat app. See our [Creating LiveChat apps](https://developers.livechatinc.com/docs/getting-started/guides/#creating-livechat-apps) documentation. 
 
+- `client_id` - identifies the application, you will receive it after creating a new application in [Developer Console](https://developers.livechatinc.com/console/apps)
+- `redirect_uri` - it must be one of the URLs that you entered when creating the new app in the [Developer Console](https://developers.livechatinc.com/console/apps)
+
 ![LiveChat license ID](react-native-app-details.png)
 
 If you don't have an account, you can create one [here](https://www.livechatinc.com/).
 
 ### Installation
 
-To import LiveChat for React Native, run the following command:
+To import LiveChat for React Native, run the following command to install required dependency (react-native-webview) and react-native-livechat library:
 
 ```javascript
 npm install react-native-webview react-native-livechat --save
@@ -44,6 +47,9 @@ npm install react-native-webview react-native-livechat --save
 - translations
 - card masking
 - chat boosters
+- customer's attachments
+- sound notfifications
+- updating customer info
 
 If you would like to use unsupported features in your React Native app, read about the Alternative React Native installation method.
 
@@ -69,12 +75,12 @@ import LiveChat from 'react-native-livechat'
 
 ...
 
-<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="<APP_CLIENT_ID>" />
 ```
 
 You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
 ```javascript
-<LiveChat group={2} license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat group={2} license="<LICENSE_ID>" redirectUri="https://example.org" clientId="<APP_CLIENT_ID>" />
 ```
 
 
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
  }
 });
 
-<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" bubbleStyles={styles.bubbleStyles} />
+<LiveChat license="<LICENSE_ID>" redirectUri="https://example.org" clientId="<APP_CLIENT_ID>" bubbleStyles={styles.bubbleStyles} />
 ```
 
 ##### Color
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
 You can change the color of the bubble by passing `bubbleColor` prop:
 
 ```javascript
-<LiveChat bubbleColor='red' license="<LICENSE_ID>" redirectUri="https://example.org" clientId="dal-app-client-id" />
+<LiveChat bubbleColor='red' license="<LICENSE_ID>" redirectUri="https://example.org" clientId="<APP_CLIENT_ID>" />
 ```
 ##### Custom bubble
 
@@ -115,7 +121,7 @@ If you don't like the default bubble, you can send `bubble` prop with your own c
 <LiveChat
  license="<LICENSE_ID>"
  redirectUri="https://example.org"
- clientId="dal-app-client-id"
+ clientId="<APP_CLIENT_ID>"
  bubble={
  <View style={{ width: 60, height: 60, backgroundColor: 'green' }} />
  }
