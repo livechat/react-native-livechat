@@ -3,8 +3,11 @@ import { View, Dimensions, StyleSheet, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import ChatBubble from './components/ChatBubble';
 import Chat from './components/Chat';
-GLOBAL.cookie = '';
-import { init } from "./sdk/livechat-visitor-sdk.min";
+import { init } from "@livechat/livechat-visitor-sdk";
+import { AuthWebView } from "@livechat/customer-auth";
+import { init as CustomerSdkInit } from "@livechat/customer-sdk";
+import * as lc3Parsers from './lc3Parsers'
+import * as lc2Parsers from './lc2Parsers'
 
 const chatIcon = require('./../assets/chat.png');
 const { width } = Dimensions.get('window');
@@ -12,11 +15,18 @@ const { width } = Dimensions.get('window');
 export default class LiveChat extends Component {
   constructor(props) {
     super(props);
-    GLOBAL.cookie = '';
     this.defineStyles();
 
     this.state = {
       isChatOn: false,
+      protocol: 'lc2',
+      messages: [],
+      users: {},
+      queued: false,
+      queueData: {},
+      isTyping: false,
+      onlineStatus: false,
+      connectionState: 'not_connected',
       bubble: props.bubble ? props.bubble : (
         <View style={this.styles.bubbleStyle}>
           <Image source={chatIcon} style={this.styles.icon} />
@@ -24,12 +34,359 @@ export default class LiveChat extends Component {
       ),
     };
 
-    GLOBAL.visitorSDK = init({
-      license: props.license,
-      group: props.group,
+  }
+
+  componentDidMount() {
+    const visitorSDK = init({
+      license: this.props.license,
+      group: this.props.group,
+      appName: 'ReactNative',
     });
 
-    props.onLoaded(GLOBAL.visitorSDK);
+    this.initVisitorSdk(visitorSDK)
+
+    visitorSDK.on('protocol_upgraded', () => {
+      this.setState({
+        protocol: 'lc3',
+        users: {},
+        messages: [],
+      })
+      this.initCustomerSdk(this.props.license, this.props.clientId, this.props.redirectUri)
+      visitorSDK.destroy()
+    })
+
+    this.props.onLoaded(visitorSDK);
+    this.visitorSDK = visitorSDK
+  }
+
+  getCustomer = () => {
+    const customerId = Object.keys(this.state.users).find(userId => this.state.users[userId].type === 'customer');
+    const user = this.state.users[customerId];
+    return user
+  };
+
+  getUser = (id) => {
+    const userId = Object.keys(this.state.users).find(_userId => _userId === id);
+    return this.state.users[userId];
+  };
+
+
+  addSystemMessage = (text) => {
+    this.setState({
+      messages: [
+        ...this.state.messages,
+        {
+          text,
+          _id: String(Math.random()),
+          createdAt: Date.now(),
+          user: {
+            _id: 'system',
+          },
+          system: true,
+        }
+      ],
+    });
+  }
+
+  updateEvent = (id, data) => {
+    const eventIndex = this.state.messages.findIndex(({ _id }) => _id === id)
+    this.setState({
+      messages: [
+        ...this.state.messages.map((_event, index) => {
+          if (index !== eventIndex) {
+            return _event
+          }
+          return {
+            ...this.state.messages[eventIndex],
+            ...data,
+          }
+        }),
+      ]
+    })
+  }
+
+  handleInputChange = (text) => {
+    if (this.state.protocol === 'lc2') {
+      this.visitorSDK.setSneakPeek({ text });
+    } else {
+      if (!this.state.chatId) {
+        return
+      }
+      this.customerSDK.setSneakPeek(this.state.chatId, text)
+    }
+  }
+
+  sendNewMessageLc2 = (message, customId) => {
+    return this.visitorSDK.sendMessage({
+      customId,
+      text: message,
+    })
+  }
+
+  sendNewMessageLc3 = (message, quickReply, customId) => {
+    let postBack = null
+    if (quickReply) {
+      const sourceEvent = this.state.messages.find(_message => _message._id === quickReply.messageId)
+      postBack = {
+        id: quickReply.postback,
+        type: 'message',
+        value: quickReply.value,
+        event_id: sourceEvent._id,
+        thread_id: sourceEvent.thread,
+      }
+    }
+    const newEvent = {
+      type: 'message',
+      text: message,
+      customId,
+      ...(postBack && { postBack }),
+    }
+    if (!this.state.chatId) {
+      return this.customerSDK.startChat({
+        events: [newEvent],
+        continuous: true,
+      }).then(chat => {
+        this.setState({
+          chatId: chat.chat,
+          chatActive: true,
+        })
+      })
+    }
+    if (!this.state.chatActive) {
+      return this.customerSDK.activateChat(this.state.chatId, {
+        events: [newEvent],
+        continuous: true,
+      }).then(chat => {
+        this.setState({
+          chatActive: true,
+        })
+      })
+    }
+    return this.customerSDK.sendEvent(this.state.chatId, newEvent)
+  }
+
+  handleSendMessage = (message, quickReply) => {
+    const newEventId = String(Math.random())
+    this.setState({
+      messages: [
+        ...this.state.messages,
+        {
+          _id: newEventId,
+          user: {
+            _id: this.getCustomer()._id
+          },
+          createdAt: Date.now(),
+          text: message,
+          pending: true,
+        }
+      ]
+    })
+    let sendMessagePromise
+    if (this.state.protocol === 'lc3') {
+      sendMessagePromise = this.sendNewMessageLc3(message, quickReply, newEventId)
+    } else {
+      sendMessagePromise = this.sendNewMessageLc2(message, newEventId)
+    }
+    sendMessagePromise.then(() => {
+      this.updateEvent(newEventId, {
+        sent: true,
+        pending: false,
+      })
+    }).catch(() => {
+      this.addSystemMessage('Sending message failed')
+    })
+  }
+
+  initVisitorSdk(visitorSdk) {
+    visitorSdk.on('connection_status_changed', ({ status }) => {
+      this.setState({
+        connectionState: status,
+      })
+    })
+    visitorSdk.on('new_message', newMessage => {
+      const hasEvent = this.state.messages.some(_stateEvent => _stateEvent._id === newMessage.id || _stateEvent._id === newMessage.customId)
+      if (hasEvent) {
+        return
+      }
+      const user = this.state.users[newMessage.authorId]
+      this.setState({
+        messages: [
+        ...this.state.messages,
+        lc2Parsers.parseNewMessage(user, newMessage),
+        ],
+      })
+    });
+    visitorSdk.on("chat_started", chatData => {
+      this.setState({
+        queued: false,
+        chatActive: true,
+      })
+    });
+    visitorSdk.on('agent_changed', newAgent => {
+      this.setState({
+        users: {
+          ...this.state.users, 
+          [newAgent.id]: lc2Parsers.parseNewAgent(newAgent)
+        }
+      })
+    });
+    visitorSdk.on('status_changed', statusData => {
+      this.setState({
+        onlineStatus: statusData.status === 'online',
+      });
+    });
+    visitorSdk.on("visitor_queued", queueData => {
+      this.setState({
+        queued: true,
+        queueData,
+      })
+    });
+    visitorSdk.on('typing_indicator', typingData => {
+      this.setState({
+        isTyping: typingData.isTyping,
+      })
+    });
+    visitorSdk.on('chat_ended', () => {
+      this.addSystemMessage('Chat is closed')
+      this.setState({
+        chatActive: false,
+      })
+    });
+    visitorSdk.on('visitor_data', visitorData => {
+      this.setState({
+        users: {
+          ...this.state.users, 
+          [visitorData.id]: lc2Parsers.parseVisitorData(visitorData)
+        }
+      })
+    });
+  }
+
+  initCustomerSdk(license, clientId, redirectUri) {
+    const config = {
+      license: Number(license, 10),
+      clientId,
+      redirectUri,
+    }
+    if (this.props.group !== null) {
+      config.group = this.props.group
+    }
+    const customerSDK = CustomerSdkInit(config);
+    this.customerSDK = customerSDK
+    customerSDK.on("new_event", ({event}) => {
+      const hasEvent = this.state.messages.some(_stateEvent => _stateEvent._id === event.id || _stateEvent._id === event.customId)
+      if (hasEvent) { 
+        return
+      }
+      const parsed = lc3Parsers.parseEvent(event, this.getUser(event.author))
+      if (parsed) {
+        this.setState({
+          messages: [
+            ...this.state.messages,
+            parsed,
+          ]
+        })
+      }
+    });
+    customerSDK.on("user_data", (user) => {
+      this.setState({
+        users: {
+          ...this.state.users, 
+          [user.id]: lc3Parsers.parseUserData(user)
+        }
+      })
+    });
+    customerSDK.on('user_is_typing', () => {
+      this.setState({
+        isTyping: true,
+      })
+    })
+    customerSDK.on('availability_updated', ({ status }) => {
+      this.setState({
+        onlineStatus: status === 'online',
+      });
+    })
+    customerSDK.on('user_stopped_typing', () => {
+      this.setState({
+        isTyping: false,
+      })
+    })
+    customerSDK.on("customer_id", customerId => {
+      this.setState({
+        users: {
+          ...this.state.users,
+          [customerId]: {
+            _id: customerId,
+            type: 'customer',
+            name: 'Customer',
+          }
+        }
+      })
+    })
+    customerSDK.on("connected", ({ availability }) => { 
+      this.setState({
+        connectionState: 'connected',
+        onlineStatus: availability === 'online',
+      })
+      customerSDK.getChatsSummary().then(data => {
+        const { chatsSummary, totalChats } = data
+        if (totalChats) {
+          this.setState({
+            chatId: chatsSummary[0].id,
+            chatActive: chatsSummary[0].active,
+          })
+          customerSDK.getChatHistory(chatsSummary[0].id).next().then((historyData) => {
+            const { value, done } = historyData
+            const newThreadEvents = value.map(thread => {
+              const { events } = thread
+              const newEvents = events.filter(({ id }) => !this.state.messages.some(_stateEvent => _stateEvent._id === id))
+              return {
+                events: newEvents,
+              }
+            })
+            const eventsToAdd = newThreadEvents.reduce((acc, current) => {
+              return [
+                ...acc,
+                ...current.events,
+              ]
+            }, [])
+            if (!eventsToAdd) {
+              return
+            }
+            const parsed = eventsToAdd.map(_event => lc3Parsers.parseEvent(_event, this.getUser(_event.author))).filter(Boolean)
+            this.setState({
+              messages: [
+                ...parsed,
+                ...this.state.messages,
+              ]
+            })
+          })
+        }
+      })
+      
+    });
+    customerSDK.on("connection_lost", () => {
+      this.setState({
+        connectionState: 'connection_lost'
+      })
+    });
+    customerSDK.on("disconnected", () => {
+      this.setState({
+        connectionState: 'disconnected'
+      })
+    });
+
+    customerSDK.on('thread_closed', () => {
+      this.setState({
+        chatActive: false,
+      })
+    })
+
+    sdk.on('incoming_chat_thread', () => {
+      this.setState({
+        chatActive: true,
+      })
+    })
   }
 
   defineStyles = () => {
@@ -56,6 +413,23 @@ export default class LiveChat extends Component {
     this.setState({ isChatOn: false });
   };
 
+  getHeaderText = () => {
+    if (this.state.messages.length && this.state.chatActive) {
+      return null
+    }
+    return this.state.onlineStatus ? this.props.greeting : this.props.noAgents
+  }
+
+  shouldDisableComposer = () => {
+    if (!this.state.onlineStatus && !this.state.chatActive) {
+      return true
+    }
+    if (this.state.queued) {
+      return true
+    }
+    return this.state.connectionState !== 'connected'
+  }
+
   render() {
     const { isChatOn } = this.state;
 
@@ -67,12 +441,24 @@ export default class LiveChat extends Component {
         disabled={this.props.movable}
         styles={this.props.bubbleStyles}
       />,
-      <Chat
+      this.visitorSDK && <Chat
         key="chat"
         {...this.props}
         isChatOn={isChatOn}
         closeChat={this.closeChat}
-      />
+        handleSendMessage={this.handleSendMessage}
+        messages={this.state.messages}
+        users={this.state.users}
+        customer={this.getCustomer()}
+        isTyping={this.state.isTyping}
+        onQuickReply={data => this.handleSendMessage(data[0].title, data[0])}
+        onlineStatus={this.state.onlineStatus}
+        connectionState={this.state.connectionState}
+        onInputChange={this.handleInputChange}
+        disableComposer={this.shouldDisableComposer()}
+        headerText={ this.getHeaderText() }
+      />,
+      <AuthWebView key="auth" />
     ];
   }
 }
@@ -87,7 +473,8 @@ LiveChat.propTypes = {
   greeting: PropTypes.string,
   noAgents: PropTypes.string,
   onLoaded: PropTypes.func,
-  
+  clientId: PropTypes.string,
+  redirectUri: PropTypes.string,
 };
 
 LiveChat.defaultProps = {
