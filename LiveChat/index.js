@@ -52,11 +52,11 @@ export default class LiveChat extends Component {
         users: {},
         messages: [],
       });
-      this.initCustomerSdk(
-        this.props.license,
-        this.props.clientId,
-        this.props.redirectUri
-      );
+      this.initCustomerSdk({
+        licenseId: this.props.license,
+        clientId: this.props.clientId,
+        redirectUri: this.props.redirectUri,
+      });
       visitorSDK.destroy();
     });
 
@@ -120,7 +120,10 @@ export default class LiveChat extends Component {
       if (!this.state.chatId) {
         return;
       }
-      this.customerSDK.setSneakPeek(this.state.chatId, text);
+      this.customerSDK.setSneakPeek({
+        chatId: this.state.chatId,
+        sneakPeekText: text,
+      });
     }
   };
 
@@ -154,7 +157,11 @@ export default class LiveChat extends Component {
     if (!this.state.chatId) {
       return this.customerSDK
         .startChat({
-          events: [newEvent],
+          chat: {
+            thread: {
+              events: [newEvent],
+            },
+          },
           continuous: true,
         })
         .then((chat) => {
@@ -166,8 +173,13 @@ export default class LiveChat extends Component {
     }
     if (!this.state.chatActive) {
       return this.customerSDK
-        .activateChat(this.state.chatId, {
-          events: [newEvent],
+        .activateChat({
+          chat: {
+            id: this.state.chatId,
+            thread: {
+              events: [newEvent],
+            },
+          },
           continuous: true,
         })
         .then((chat) => {
@@ -176,7 +188,10 @@ export default class LiveChat extends Component {
           });
         });
     }
-    return this.customerSDK.sendEvent(this.state.chatId, newEvent);
+    return this.customerSDK.sendEvent({
+      chatId: this.state.chatId,
+      event: newEvent,
+    });
   };
 
   handleSendMessage = (message, quickReply) => {
@@ -286,9 +301,9 @@ export default class LiveChat extends Component {
     });
   }
 
-  initCustomerSdk(license, clientId, redirectUri) {
+  initCustomerSdk({ licenseId, clientId, redirectUri }) {
     const config = {
-      license: Number(license, 10),
+      licenseId: Number(licenseId, 10),
       clientId,
       redirectUri,
     };
@@ -297,7 +312,7 @@ export default class LiveChat extends Component {
     }
     const customerSDK = CustomerSdkInit(config);
     this.customerSDK = customerSDK;
-    customerSDK.on("new_event", ({ event }) => {
+    customerSDK.on("incoming_event", ({ event }) => {
       const hasEvent = this.state.messages.some(
         (_stateEvent) =>
           _stateEvent._id === event.id || _stateEvent._id === event.customId
@@ -305,7 +320,7 @@ export default class LiveChat extends Component {
       if (hasEvent) {
         return;
       }
-      const parsed = lc3Parsers.parseEvent(event, this.getUser(event.author));
+      const parsed = lc3Parsers.parseEvent(event, this.getUser(event.authorId));
       if (parsed) {
         this.setState({
           messages: [...this.state.messages, parsed],
@@ -352,7 +367,7 @@ export default class LiveChat extends Component {
         connectionState: "connected",
         onlineStatus: availability === "online",
       });
-      customerSDK.getChatsSummary().then((data) => {
+      customerSDK.listChats().then((data) => {
         const { chatsSummary, totalChats } = data;
         if (totalChats) {
           this.setState({
@@ -360,11 +375,11 @@ export default class LiveChat extends Component {
             chatActive: chatsSummary[0].active,
           });
           customerSDK
-            .getChatHistory(chatsSummary[0].id)
+            .getChatHistory({ chatId: chatsSummary[0].id })
             .next()
             .then((historyData) => {
               const { value, done } = historyData;
-              const newThreadEvents = value.map((thread) => {
+              const newThreadEvents = value.threads.map((thread) => {
                 const { events } = thread;
                 const newEvents = events.filter(
                   ({ id }) =>
@@ -383,9 +398,12 @@ export default class LiveChat extends Component {
                 return;
               }
               const parsed = eventsToAdd
-                .map((_event) =>
-                  lc3Parsers.parseEvent(_event, this.getUser(_event.author))
-                )
+                .map((_event) => {
+                  return lc3Parsers.parseEvent(
+                    _event,
+                    this.getUser(_event.authorId)
+                  );
+                })
                 .filter(Boolean);
               this.setState({
                 messages: [...parsed, ...this.state.messages],

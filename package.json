@@ -16,7 +16,6 @@
     "chat",
     "visitorSDK"
   ],
-
   "author": "Venits",
   "license": "MIT",
   "bugs": {
@@ -29,7 +28,7 @@
   "homepage": "https://github.com/livechat/react-native-livechat#readme",
   "dependencies": {
     "@livechat/customer-auth": "^0.4.0-alpha.4",
-    "@livechat/customer-sdk": "^2.0.0-alpha.7",
+    "@livechat/customer-sdk": "^2.0.0-beta.2",
     "@livechat/livechat-visitor-sdk": "0.37.0-4",
     "react-native-animatable": "^1.2.4",
     "react-native-gifted-chat": "^0.13.0"
