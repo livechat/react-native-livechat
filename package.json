@@ -1,6 +1,6 @@
 {
   "name": "react-native-livechat",
-  "version": "2.0.0-7",
+  "version": "2.0.0-8",
   "description": "React Native component to integrate LiveChat with your application",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/livechat/react-native-livechat#readme",
   "dependencies": {
-    "@livechat/customer-auth": "^0.4.0-alpha.4",
+    "@livechat/customer-auth": "^0.4.0-alpha.6",
     "@livechat/customer-sdk": "^2.0.0-beta.2",
     "@livechat/livechat-visitor-sdk": "0.37.0-4",
     "react-native-animatable": "^1.2.4",
