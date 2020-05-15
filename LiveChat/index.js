@@ -324,6 +324,7 @@ export default class LiveChat extends Component {
       if (parsed) {
         this.setState({
           messages: [...this.state.messages, parsed],
+          isTyping: false,
         });
       }
     });
@@ -335,19 +336,15 @@ export default class LiveChat extends Component {
         },
       });
     });
-    customerSDK.on("user_is_typing", () => {
+    customerSDK.on("incoming_typing_indicator", ({ typingIndicator }) => {
       this.setState({
-        isTyping: true,
+        isTyping: typingIndicator.isTyping,
       });
     });
-    customerSDK.on("availability_updated", ({ status }) => {
+    customerSDK.on("availability_updated", (data) => {
+      const { availability } = data;
       this.setState({
-        onlineStatus: status === "online",
-      });
-    });
-    customerSDK.on("user_stopped_typing", () => {
-      this.setState({
-        isTyping: false,
+        onlineStatus: availability === "online",
       });
     });
     customerSDK.on("customer_id", (customerId) => {
