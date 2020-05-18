@@ -10,12 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/livechat/react-native-livechat.git"
   },
-  "keywords": [
-    "react-native",
-    "livechat",
-    "chat",
-    "visitorSDK"
-  ],
+  "keywords": ["react-native", "livechat", "chat", "visitorSDK"],
   "author": "Venits",
   "license": "MIT",
   "bugs": {
