@@ -1,6 +1,6 @@
 {
   "name": "react-native-livechat",
-  "version": "2.0.0-11",
+  "version": "2.0.0-12",
   "description": "React Native component to integrate LiveChat with your application",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/livechat/react-native-livechat.git"
   },
-  "keywords": ["react-native", "livechat", "chat", "visitorSDK"],
+  "keywords": [
+    "react-native",
+    "livechat",
+    "chat",
+    "visitorSDK"
+  ],
   "author": "Venits",
   "license": "MIT",
   "bugs": {
