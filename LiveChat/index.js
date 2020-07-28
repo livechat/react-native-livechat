@@ -293,7 +293,7 @@ export default class LiveChat extends Component {
 			redirectUri,
 		}
 		if (this.props.group !== null) {
-			config.group = this.props.group
+			config.groupId = this.props.group
 		}
 		const customerSDK = CustomerSdkInit(config)
 		this.customerSDK = customerSDK
