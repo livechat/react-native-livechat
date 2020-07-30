@@ -398,13 +398,13 @@ export default class LiveChat extends Component {
 			})
 		})
 
-		customerSDK.on('thread_closed', () => {
+		customerSDK.on('chat_deactivated', () => {
 			this.setState({
 				chatActive: false,
 			})
 		})
 
-		sdk.on('incoming_chat_thread', () => {
+		customerSDK.on('incoming_chat', () => {
 			this.setState({
 				chatActive: true,
 			})
