@@ -56,6 +56,7 @@ export default class LiveChat extends Component {
 				licenseId: this.props.license,
 				clientId: this.props.clientId,
 				redirectUri: this.props.redirectUri,
+				region: this.props.region,
 			})
 			visitorSDK.destroy()
 		})
@@ -286,7 +287,7 @@ export default class LiveChat extends Component {
 		})
 	}
 
-	initCustomerSdk({ licenseId, clientId, redirectUri }) {
+	initCustomerSdk({ licenseId, clientId, redirectUri, region }) {
 		const config = {
 			licenseId: Number(licenseId, 10),
 			clientId,
@@ -294,6 +295,9 @@ export default class LiveChat extends Component {
 		}
 		if (this.props.group !== null) {
 			config.groupId = this.props.group
+		}
+		if (region) {
+			config.region = region
 		}
 		const customerSDK = CustomerSdkInit(config)
 		this.customerSDK = customerSDK
@@ -398,13 +402,13 @@ export default class LiveChat extends Component {
 			})
 		})
 
-		customerSDK.on('thread_closed', () => {
+		customerSDK.on('chat_deactivated', () => {
 			this.setState({
 				chatActive: false,
 			})
 		})
 
-		sdk.on('incoming_chat_thread', () => {
+		customerSDK.on('incoming_chat', () => {
 			this.setState({
 				chatActive: true,
 			})

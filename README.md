@@ -89,8 +89,10 @@ You can also pass 'group' as a prop, to assign chat to chosen LiveChat group.
   license="<LICENSE_ID>"
   redirectUri="https://example.org"
   clientId="<APP_CLIENT_ID>"
+  region="dal" // optional, dal is the default
 />
 ```
+
 
 ### Customization
 
