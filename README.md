@@ -62,7 +62,7 @@ To do it, use `react-native-webview` library and add `Webview` component with yo
 ```javascript
 <WebView
   source={{
-    uri: 'https://secure.livechatinc.com/licence/<LICENSE_ID>/v2/open_chat.cgi',
+    uri: 'https://direct.lc.chat/<LICENSE_ID/',
   }}
 />
 ```
