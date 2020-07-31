@@ -297,7 +297,7 @@ export default class LiveChat extends Component {
 			config.group = this.props.group
 		}
 		if (region) {
-			config.region = config
+			config.region = region
 		}
 		const customerSDK = CustomerSdkInit(config)
 		this.customerSDK = customerSDK
