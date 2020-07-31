@@ -1,6 +1,6 @@
 {
   "name": "react-native-livechat",
-  "version": "2.0.0-15",
+  "version": "2.0.1-rc",
   "description": "React Native component to integrate LiveChat with your application",
   "main": "index.js",
   "scripts": {
