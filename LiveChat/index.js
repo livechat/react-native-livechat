@@ -352,6 +352,7 @@ export default class LiveChat extends Component {
 				connectionState: 'connected',
 				onlineStatus: availability === 'online',
 			})
+			customerSDK.updateCustomer(this.props.customerData);
 			customerSDK.listChats().then((data) => {
 				const { chatsSummary, totalChats } = data
 				if (totalChats) {
@@ -504,6 +505,7 @@ LiveChat.propTypes = {
 	onLoaded: PropTypes.func,
 	clientId: PropTypes.string,
 	redirectUri: PropTypes.string,
+	customerData: PropTypes.object
 }
 
 LiveChat.defaultProps = {
