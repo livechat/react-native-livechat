@@ -18,7 +18,7 @@ export default class LiveChat extends Component {
 		this.defineStyles()
 
 		this.state = {
-			isChatOn: false,
+			isChatOn: true,
 			protocol: 'lc2',
 			messages: [],
 			users: {},
@@ -464,13 +464,13 @@ export default class LiveChat extends Component {
 		const { isChatOn } = this.state
 
 		return [
-			<ChatBubble
+			this.props.displayBubble && (<ChatBubble
 				key="bubble"
 				openChat={this.openChat}
 				bubble={this.state.bubble}
 				disabled={this.props.movable}
 				styles={this.props.bubbleStyles}
-			/>,
+			/>),
 			this.visitorSDK && (
 				<Chat
 					key="chat"
@@ -507,7 +507,8 @@ LiveChat.propTypes = {
 	onLoaded: PropTypes.func,
 	clientId: PropTypes.string,
 	redirectUri: PropTypes.string,
-	customerData: PropTypes.object
+	customerData: PropTypes.object,
+	displayBubble: PropTypes.bool
 }
 
 LiveChat.defaultProps = {
@@ -523,4 +524,5 @@ LiveChat.defaultProps = {
 	chatTitle: 'Chat with us!',
 	greeting: 'Welcome to our LiveChat!\nHow may We help you?',
 	noAgents: 'Our agents are not available right now.',
+	displayBubble: false
 }
