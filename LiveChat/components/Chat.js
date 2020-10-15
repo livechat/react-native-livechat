@@ -1,14 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GiftedChat } from 'react-native-gifted-chat'
+import { TypingAnimation } from "react-native-typing-animation";
+
 
 export default class Chat extends React.Component {
 	constructor(props) {
+
 		super(props)
+
+		this.renderFooter = this.renderFooter.bind(this)
+
 	}
 
 	handleSend = ([message]) => {
 		this.props.handleSendMessage(message.text)
+	}
+
+	renderFooter = () => {
+		if (this.props.isTyping) {
+			return (
+				<TypingAnimation/>
+			)
+		}
+		return null
 	}
 
 	render() {
@@ -31,7 +46,6 @@ export default class Chat extends React.Component {
 					<GiftedChat
 						inverted={false}
 						messages={messages}
-						scrollToBottom
 						onSend={this.handleSend}
 						onInputTextChanged={onInputChange}
 						user={customer}
