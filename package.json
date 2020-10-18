@@ -4,7 +4,8 @@
   "description": "React Native component to integrate LiveChat with your application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@livechat/customer-sdk": "^2.0.1",
     "@livechat/livechat-visitor-sdk": "0.37.0-4",
     "react-native-animatable": "^1.2.4",
-    "react-native-gifted-chat": "^0.16.1"
+    "react-native-gifted-chat": "^0.16.1",
+    "react-native-typing-animation": "^0.1.7"
   }
 }
