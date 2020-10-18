@@ -11,6 +11,7 @@ import * as lc2Parsers from './lc2Parsers'
 
 const chatIcon = require('./../assets/chat.png')
 const { width } = Dimensions.get('window')
+const TYPING_INDICATOR_ID = 'typingIndicator';
 
 export default class LiveChat extends Component {
 	constructor(props) {
@@ -30,10 +31,10 @@ export default class LiveChat extends Component {
 			bubble: props.bubble ? (
 				props.bubble
 			) : (
-				<View style={this.styles.bubbleStyle}>
-					<Image source={chatIcon} style={this.styles.icon} />
-				</View>
-			),
+					<View style={this.styles.bubbleStyle}>
+						<Image source={chatIcon} style={this.styles.icon} />
+					</View>
+				),
 		}
 	}
 
@@ -311,8 +312,8 @@ export default class LiveChat extends Component {
 			const parsed = lc3Parsers.parseEvent(event, this.getUser(event.authorId))
 			if (parsed) {
 				this.setState({
-					messages: [...this.state.messages, parsed],
-					isTyping: false,
+					messages: [...this.state.messages.filter(message => message._id !== TYPING_INDICATOR_ID), parsed],
+					isTyping: false
 				})
 			}
 		})
@@ -325,8 +326,19 @@ export default class LiveChat extends Component {
 			})
 		})
 		customerSDK.on('incoming_typing_indicator', ({ typingIndicator }) => {
+			const displayTypingIndicator = typingIndicator.isTyping && !this.state.messages.find(message => message._id === TYPING_INDICATOR_ID);
+			const typingIndicatorMessageMock = {
+				_id: TYPING_INDICATOR_ID,
+				user: this.state.users[typingIndicator.authorId],
+				text: TYPING_INDICATOR_ID,
+				system: false,
+				sent: true,
+				pending: false
+			}
+
 			this.setState({
 				isTyping: typingIndicator.isTyping,
+				messages: displayTypingIndicator ? [...this.state.messages, typingIndicatorMessageMock] : this.state.messages.filter(message => message._id !== TYPING_INDICATOR_ID)
 			})
 		})
 		customerSDK.on('availability_updated', (data) => {
@@ -519,7 +531,7 @@ LiveChat.defaultProps = {
 		right: 12,
 	},
 	movable: true,
-	onLoaded: () => {},
+	onLoaded: () => { },
 	group: 0,
 	chatTitle: 'Chat with us!',
 	greeting: 'Welcome to our LiveChat!\nHow may We help you?',
