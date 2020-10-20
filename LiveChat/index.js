@@ -199,6 +199,7 @@ export default class LiveChat extends Component {
 					_id: newEventId,
 					user: {
 						_id: this.getCustomer()._id,
+						avatar: this.getCustomer().avatar
 					},
 					createdAt: Date.now(),
 					text: message,
