@@ -17,15 +17,6 @@ export default class Chat extends React.Component {
 		this.props.handleSendMessage(message.text)
 	}
 
-	renderFooter = () => {
-		if (this.props.isTyping) {
-			return (
-				<TypingAnimation/>
-			)
-		}
-		return null
-	}
-
 	render() {
 		const {
 			messages,
