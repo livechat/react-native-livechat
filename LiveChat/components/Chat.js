@@ -55,12 +55,3 @@ Chat.propTypes = {
 	isTyping: PropTypes.bool.isRequired,
 	connectionState: PropTypes.string.isRequired,
 }
-
-const styles = StyleSheet.create({
-	typingStyle: {
-		width: 30,
-		height: 12,
-		marginLeft: 4,
-		marginBottom: 30
-	}
-})
