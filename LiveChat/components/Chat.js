@@ -1,17 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GiftedChat } from 'react-native-gifted-chat'
-import { TypingAnimation } from "react-native-typing-animation";
-
-
+import { StyleSheet } from 'react-native';
 export default class Chat extends React.Component {
-	constructor(props) {
-
-		super(props)
-
-		this.renderFooter = this.renderFooter.bind(this)
-
-	}
 
 	handleSend = ([message]) => {
 		this.props.handleSendMessage(message.text)
@@ -31,27 +22,26 @@ export default class Chat extends React.Component {
 			headerText,
 			...restProps
 		} = this.props
-
 		if (isChatOn) {
 			return (
-					<GiftedChat
-						inverted={false}
-						messages={messages}
-						onSend={this.handleSend}
-						onInputTextChanged={onInputChange}
-						user={customer}
-						isTyping={isTyping}
-						onQuickReply={onQuickReply}
-						disableComposer={disableComposer}
-						showAvatarForEveryMessage={false}
-						{...restProps}
-					/>
+				<GiftedChat
+					inverted={false}
+					messages={messages}
+					onSend={this.handleSend}
+					onInputTextChanged={onInputChange}
+					user={customer}
+					isTyping={isTyping}
+					onQuickReply={onQuickReply}
+					disableComposer={disableComposer}
+					showAvatarForEveryMessage={false}
+					scrollToBottom={true}
+					{...restProps}
+				/>
 			)
 		}
 		return null
 	}
 }
-
 Chat.propTypes = {
 	license: PropTypes.string.isRequired,
 	chatTitle: PropTypes.string.isRequired,
@@ -65,3 +55,12 @@ Chat.propTypes = {
 	isTyping: PropTypes.bool.isRequired,
 	connectionState: PropTypes.string.isRequired,
 }
+
+const styles = StyleSheet.create({
+	typingStyle: {
+		width: 30,
+		height: 12,
+		marginLeft: 4,
+		marginBottom: 30
+	}
+})
