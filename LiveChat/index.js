@@ -503,7 +503,7 @@ export default class LiveChat extends Component {
 					headerText={this.getHeaderText()}
 				/>
 			),
-			<View style={authStyle}>
+			<View style={authStyle.authView}>
 				<AuthWebView key="auth" />
 			</View>,
 		]
@@ -511,7 +511,9 @@ export default class LiveChat extends Component {
 }
 
 const authStyle = StyleSheet.create({
-	display: 'none'
+	authView: {
+		display: 'none'
+	}
 });
 
 LiveChat.propTypes = {
