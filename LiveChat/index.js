@@ -411,6 +411,7 @@ export default class LiveChat extends Component {
 							this.setState({
 								messages: [...parsed, ...this.state.messages],
 							})
+							this.removePlaceHolder();
 						})
 				}
 			})
