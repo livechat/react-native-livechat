@@ -66,6 +66,11 @@ export default class LiveChat extends Component {
 		this.visitorSDK = visitorSDK
 	}
 
+
+	removePlaceHolder = () => {
+		this.props.onMessagesLoad(true)
+	}
+
 	getCustomer = () => {
 		const customerId = Object.keys(this.state.users).find((userId) => this.state.users[userId].type === 'customer')
 		const user = this.state.users[customerId]
@@ -370,6 +375,9 @@ export default class LiveChat extends Component {
 
 			customerSDK.listChats().then((data) => {
 				const { chatsSummary, totalChats } = data
+				if (!totalChats) {
+					this.removePlaceHolder();
+				}
 				if (totalChats) {
 					this.setState({
 						chatId: chatsSummary[0].id,
@@ -403,6 +411,7 @@ export default class LiveChat extends Component {
 							this.setState({
 								messages: [...parsed, ...this.state.messages],
 							})
+							this.removePlaceHolder();
 						})
 				}
 			})
@@ -529,7 +538,8 @@ LiveChat.propTypes = {
 	clientId: PropTypes.string,
 	redirectUri: PropTypes.string,
 	customerData: PropTypes.object,
-	displayBubble: PropTypes.bool
+	displayBubble: PropTypes.bool,
+	onMessagesLoad: PropTypes.func
 }
 
 LiveChat.defaultProps = {
