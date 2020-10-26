@@ -38,6 +38,12 @@ export default class LiveChat extends Component {
 		}
 	}
 
+	componentDidUpdate() {
+		if (this.state.messages) {
+			this.props.onMessagesLoad(true)
+		}
+	}
+
 	componentDidMount() {
 		const visitorSDK = init({
 			license: this.props.license,
@@ -529,7 +535,8 @@ LiveChat.propTypes = {
 	clientId: PropTypes.string,
 	redirectUri: PropTypes.string,
 	customerData: PropTypes.object,
-	displayBubble: PropTypes.bool
+	displayBubble: PropTypes.bool,
+	onMessagesLoad: PropTypes.func
 }
 
 LiveChat.defaultProps = {
