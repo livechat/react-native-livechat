@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GiftedChat } from 'react-native-gifted-chat'
-import { StyleSheet } from 'react-native';
+
 export default class Chat extends React.Component {
 
 	handleSend = ([message]) => {
@@ -16,10 +16,8 @@ export default class Chat extends React.Component {
 			isTyping,
 			isChatOn,
 			onQuickReply,
-			disableComposer,
 			chatTitle,
 			closeChat,
-			headerText,
 			...restProps
 		} = this.props
 		if (isChatOn) {
@@ -32,7 +30,6 @@ export default class Chat extends React.Component {
 					user={customer}
 					isTyping={isTyping}
 					onQuickReply={onQuickReply}
-					disableComposer={disableComposer}
 					showAvatarForEveryMessage={false}
 					scrollToBottom={true}
 					{...restProps}
@@ -42,6 +39,7 @@ export default class Chat extends React.Component {
 		return null
 	}
 }
+
 Chat.propTypes = {
 	license: PropTypes.string.isRequired,
 	chatTitle: PropTypes.string.isRequired,
