@@ -472,16 +472,6 @@ export default class LiveChat extends Component {
 		return this.state.onlineStatus ? this.props.greeting : this.props.noAgents
 	}
 
-	shouldDisableComposer = () => {
-		if (!this.state.onlineStatus && !this.state.chatActive) {
-			return true
-		}
-		if (this.state.queued) {
-			return true
-		}
-		return this.state.connectionState !== 'connected'
-	}
-
 	render() {
 		const { isChatOn } = this.state
 
@@ -508,7 +498,6 @@ export default class LiveChat extends Component {
 					onlineStatus={this.state.onlineStatus}
 					connectionState={this.state.connectionState}
 					onInputChange={this.handleInputChange}
-					disableComposer={this.shouldDisableComposer()}
 					headerText={this.getHeaderText()}
 				/>
 			),
