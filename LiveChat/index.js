@@ -38,12 +38,6 @@ export default class LiveChat extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.state.messages) {
-			this.props.onMessagesLoad(true)
-		}
-	}
-
 	componentDidMount() {
 		const visitorSDK = init({
 			license: this.props.license,
@@ -70,6 +64,11 @@ export default class LiveChat extends Component {
 
 		this.props.onLoaded(visitorSDK)
 		this.visitorSDK = visitorSDK
+	}
+
+
+	removePlaceHolder = () => {
+		this.props.onMessagesLoad(true)
 	}
 
 	getCustomer = () => {
@@ -376,6 +375,9 @@ export default class LiveChat extends Component {
 
 			customerSDK.listChats().then((data) => {
 				const { chatsSummary, totalChats } = data
+				if (!totalChats) {
+					this.removePlaceHolder();
+				}
 				if (totalChats) {
 					this.setState({
 						chatId: chatsSummary[0].id,
