@@ -13,7 +13,7 @@ jobs:
       - restore_cache:
           name: Restore npm package cache
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - npm-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
@@ -23,7 +23,8 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          key:
+            - npm-dependencies-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ~/repo
           paths: .
