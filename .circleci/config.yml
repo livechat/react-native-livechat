@@ -23,8 +23,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key:
-            - npm-dependencies-{{ checksum "package-lock.json" }}
+          key: npm-dependencies-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ~/repo
           paths: .
