@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 
 defaults: &defaults
   working_directory: ~/repo
@@ -60,7 +60,7 @@ jobs:
           name: Publish package
           command: npm publish
 workflows:
-  version: 2.1
+  version: 2
   test-deploy:
     jobs:
       - checkout:
