@@ -161,7 +161,7 @@ export default class LiveChat extends Component {
 				})
 				.then((chat) => {
 					this.setState({
-						chatId: chat.chat,
+						chatId: chat.chat.id,
 						chatActive: true,
 					})
 				})
