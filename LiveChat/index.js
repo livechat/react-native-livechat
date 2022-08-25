@@ -3,11 +3,9 @@ import { View, Dimensions, StyleSheet, Image } from 'react-native'
 import PropTypes from 'prop-types'
 import ChatBubble from './components/ChatBubble'
 import Chat from './components/Chat'
-import { init } from '@livechat/livechat-visitor-sdk'
 import { AuthWebView } from '@livechat/customer-auth'
-import { init as CustomerSdkInit } from '@livechat/customer-sdk'
+import * as CustomerSDK from '@livechat/customer-sdk'
 import * as lc3Parsers from './lc3Parsers'
-import * as lc2Parsers from './lc2Parsers'
 
 const chatIcon = require('./../assets/chat.png')
 const { width } = Dimensions.get('window')
@@ -19,7 +17,6 @@ export default class LiveChat extends Component {
 
 		this.state = {
 			isChatOn: false,
-			protocol: 'lc2',
 			messages: [],
 			users: {},
 			queued: false,
@@ -38,31 +35,14 @@ export default class LiveChat extends Component {
 	}
 
 	componentDidMount() {
-		const visitorSDK = init({
-			license: this.props.license,
-			group: this.props.group,
-			appName: 'ReactNative',
+		this.initCustomerSdk({
+			licenseId: this.props.license,
+			clientId: this.props.clientId,
+			redirectUri: this.props.redirectUri,
+			region: this.props.region,
 		})
 
-		this.initVisitorSdk(visitorSDK)
-
-		visitorSDK.on('protocol_upgraded', () => {
-			this.setState({
-				protocol: 'lc3',
-				users: {},
-				messages: [],
-			})
-			this.initCustomerSdk({
-				licenseId: this.props.license,
-				clientId: this.props.clientId,
-				redirectUri: this.props.redirectUri,
-				region: this.props.region,
-			})
-			visitorSDK.destroy()
-		})
-
-		this.props.onLoaded(visitorSDK)
-		this.visitorSDK = visitorSDK
+		this.props.onLoaded(this.customerSDK)
 	}
 
 	getCustomer = () => {
@@ -111,27 +91,16 @@ export default class LiveChat extends Component {
 	}
 
 	handleInputChange = (text) => {
-		if (this.state.protocol === 'lc2') {
-			this.visitorSDK.setSneakPeek({ text })
-		} else {
-			if (!this.state.chatId) {
-				return
-			}
-			this.customerSDK.setSneakPeek({
-				chatId: this.state.chatId,
-				sneakPeekText: text,
-			})
+		if (!this.state.chatId) {
+			return
 		}
-	}
-
-	sendNewMessageLc2 = (message, customId) => {
-		return this.visitorSDK.sendMessage({
-			customId,
-			text: message,
+		this.customerSDK.setSneakPeek({
+			chatId: this.state.chatId,
+			sneakPeekText: text,
 		})
 	}
 
-	sendNewMessageLc3 = (message, quickReply, customId) => {
+	sendNewMessage = (message, quickReply, customId) => {
 		let postBack = null
 		if (quickReply) {
 			const sourceEvent = this.state.messages.find((_message) => _message._id === quickReply.messageId)
@@ -205,13 +174,7 @@ export default class LiveChat extends Component {
 				},
 			],
 		})
-		let sendMessagePromise
-		if (this.state.protocol === 'lc3') {
-			sendMessagePromise = this.sendNewMessageLc3(message, quickReply, newEventId)
-		} else {
-			sendMessagePromise = this.sendNewMessageLc2(message, newEventId)
-		}
-		sendMessagePromise
+		this.sendNewMessage(message, quickReply, newEventId)
 			.then(() => {
 				this.updateEvent(newEventId, {
 					sent: true,
@@ -221,70 +184,6 @@ export default class LiveChat extends Component {
 			.catch(() => {
 				this.addSystemMessage('Sending message failed')
 			})
-	}
-
-	initVisitorSdk(visitorSdk) {
-		visitorSdk.on('connection_status_changed', ({ status }) => {
-			this.setState({
-				connectionState: status,
-			})
-		})
-		visitorSdk.on('new_message', (newMessage) => {
-			const hasEvent = this.state.messages.some(
-				(_stateEvent) => _stateEvent._id === newMessage.id || _stateEvent._id === newMessage.customId,
-			)
-			if (hasEvent) {
-				return
-			}
-			const user = this.state.users[newMessage.authorId]
-			this.setState({
-				messages: [...this.state.messages, lc2Parsers.parseNewMessage(user, newMessage)],
-			})
-		})
-		visitorSdk.on('chat_started', (chatData) => {
-			this.setState({
-				queued: false,
-				chatActive: true,
-			})
-		})
-		visitorSdk.on('agent_changed', (newAgent) => {
-			this.setState({
-				users: {
-					...this.state.users,
-					[newAgent.id]: lc2Parsers.parseNewAgent(newAgent),
-				},
-			})
-		})
-		visitorSdk.on('status_changed', (statusData) => {
-			this.setState({
-				onlineStatus: statusData.status === 'online',
-			})
-		})
-		visitorSdk.on('visitor_queued', (queueData) => {
-			this.setState({
-				queued: true,
-				queueData,
-			})
-		})
-		visitorSdk.on('typing_indicator', (typingData) => {
-			this.setState({
-				isTyping: typingData.isTyping,
-			})
-		})
-		visitorSdk.on('chat_ended', () => {
-			this.addSystemMessage('Chat is closed')
-			this.setState({
-				chatActive: false,
-			})
-		})
-		visitorSdk.on('visitor_data', (visitorData) => {
-			this.setState({
-				users: {
-					...this.state.users,
-					[visitorData.id]: lc2Parsers.parseVisitorData(visitorData),
-				},
-			})
-		})
 	}
 
 	initCustomerSdk({ licenseId, clientId, redirectUri, region }) {
@@ -299,7 +198,7 @@ export default class LiveChat extends Component {
 		if (region) {
 			config.region = region
 		}
-		const customerSDK = CustomerSdkInit(config)
+		const customerSDK = CustomerSDK.init(config)
 		this.customerSDK = customerSDK
 		customerSDK.on('incoming_event', ({ event }) => {
 			const hasEvent = this.state.messages.some(
@@ -468,7 +367,7 @@ export default class LiveChat extends Component {
 				disabled={this.props.movable}
 				styles={this.props.bubbleStyles}
 			/>,
-			this.visitorSDK && (
+			this.customerSDK && (
 				<Chat
 					key="chat"
 					{...this.props}
