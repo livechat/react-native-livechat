@@ -1,8 +1,8 @@
 ### ⚠️ DEPRECATED ⚠️
 
-This project is no longer maintained. In order to implement the LiveChat Chat Widget inside your React Native applocation, please use Webview to embed web LiveChat widget using a direct chat link.
+This project is no longer maintained. In order to implement the LiveChat Chat Widget inside your React Native application, please use Webview to embed the web Chat Widget using a direct chat link.
 
-To do it, use `react-native-webview` library and add `Webview` component with your licenses direct chat link, replacing `<LICENSE_ID>` string with you LiveChat's license id.
+To do it, use the `react-native-webview` library and add a `Webview` component as shown below. Remember to replace the `<LICENSE_ID>` string with your LiveChat's license id.
 
 ```javascript
 <WebView
